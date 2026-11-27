@@ -82,3 +82,12 @@ def test_normalize_invoice_converts_every_field():
     assert invoice.line_items[0].amount == Decimal("50000.00")
     assert invoice.discount == Decimal("0")
     assert invoice.total == Decimal("59000.00")
+
+
+def test_parse_amount_reads_a_decimal_comma_with_dot_thousands_separators():
+    assert parse_amount("1.600,00") == Decimal("1600.00")
+    assert parse_amount("1.904,00") == Decimal("1904.00")
+
+
+def test_parse_amount_reads_a_single_decimal_comma():
+    assert parse_amount("304,00") == Decimal("304.00")

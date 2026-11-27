@@ -33,7 +33,13 @@ def parse_amount(text: str) -> Decimal:
         if text.strip() in ("", "-"):
             return Decimal("0")
         raise ValueError(f"not an amount: {text!r}")
-    digits = match.group(0).rstrip(".,").replace(",", "")
+    digits = match.group(0).rstrip(".,")
+    if "." in digits and "," in digits and digits.rfind(",") > digits.rfind("."):
+        digits = digits.replace(".", "").replace(",", ".")
+    elif re.fullmatch(r"-?\d+,\d{2}", digits):
+        digits = digits.replace(",", ".")
+    else:
+        digits = digits.replace(",", "")
     try:
         return Decimal(digits)
     except InvalidOperation as exc:
